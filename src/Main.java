@@ -9,15 +9,19 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Scanner;
+import java.util.List;
 
 //images of cards are in the zip, any filepaths in this file should be changed accordingly to their placement on the PC
 public class Main extends JFrame{
     int pot = 0;
-    player player1 = new player(1, "user");
-    player player2 = new player(2, "kid");
-    player player3 = new player(3, "pro");
-    player player4 = new player(4, "oldman");
+    Card[] deck;
+    Player player1 = new User(1);
+    Player player2 = new Kid(2);
+    Player player3 = new Pro(3);
+    Player player4 = new Oldman(4);
     JLabel action1 = new JLabel("this label will");
     JLabel action2 = new JLabel("register other");
     JLabel action3 = new JLabel("players' moves");
@@ -29,8 +33,8 @@ public class Main extends JFrame{
     JLabel moneyykid = new JLabel("Money: "+player2.money);
     JLabel moneyuser = new JLabel("Money: "+ player1.money);
     JLabel moneyoldman = new JLabel("Money: "+ player4.money);
-    JLabel potson = new JLabel("Pot: "+pot);
-    JPanel gracza;
+    JLabel pot_label = new JLabel("Pot: "+pot);
+    JPanel player_panel;
 
     public Main()
     {
@@ -63,10 +67,10 @@ public class Main extends JFrame{
                 Scanner reader = null;
                 try {
                     reader = new Scanner(file);
-                    player1.money = Integer.valueOf(reader.nextLine());
-                    player2.money = Integer.valueOf(reader.nextLine());
-                    player3.money = Integer.valueOf(reader.nextLine());
-                    player4.money = Integer.valueOf(reader.nextLine());
+                    player1.money = Integer.parseInt(reader.nextLine());
+                    player2.money = Integer.parseInt(reader.nextLine());
+                    player3.money = Integer.parseInt(reader.nextLine());
+                    player4.money = Integer.parseInt(reader.nextLine());
 
                 } catch (FileNotFoundException ex) {
                     JOptionPane.showInputDialog("file not found, starting a new game instead");
@@ -82,10 +86,10 @@ public class Main extends JFrame{
         add(load);
     }
     JPanel common = placeholder(5);
-    JPanel pro = new JPanel();
-    JPanel user = new JPanel();
-    JPanel kid = new JPanel();
-    JPanel oldman = new JPanel();
+    JPanel pro_panel = new JPanel();
+    JPanel user_panel = new JPanel();
+    JPanel kid_panel = new JPanel();
+    JPanel oldman_panel = new JPanel();
     JButton[] actionButtons;
     JPanel commonPanel = new JPanel();
     JPanel placeholderyuser = placeholder(2);
@@ -118,23 +122,23 @@ public class Main extends JFrame{
         action2.setFont(new Font(null, Font.BOLD, 60));
         action3.setFont(new Font(null, Font.BOLD, 60));
 
-        common.add(potson);
+        common.add(pot_label);
 
-        pro.add(moneyepro);
-        pro.add(tablepro);
-        pro.add(placeholderypro);
+        pro_panel.add(moneyepro);
+        pro_panel.add(tablepro);
+        pro_panel.add(placeholderypro);
 
-        user.add(moneyuser);
-        user.add(tableuser);
-        user.add(placeholderyuser);
+        user_panel.add(moneyuser);
+        user_panel.add(tableuser);
+        user_panel.add(placeholderyuser);
 
-        kid.add(moneyykid);
-        kid.add(tablekid);
-        kid.add(placeholderykid);
+        kid_panel.add(moneyykid);
+        kid_panel.add(tablekid);
+        kid_panel.add(placeholderykid);
 
-        oldman.add(moneyoldman);
-        oldman.add(tableoldman);
-        oldman.add(placeholderyoldman);
+        oldman_panel.add(moneyoldman);
+        oldman_panel.add(tableoldman);
+        oldman_panel.add(placeholderyoldman);
         actionButtons = createActionButtonArray();
 
         JPanel buttonPanel = new JPanel(new FlowLayout());
@@ -143,11 +147,11 @@ public class Main extends JFrame{
             button.setEnabled(false);
         }
         setLayout(new BorderLayout());
-        add(pro, BorderLayout.NORTH);
-        add(kid, BorderLayout.WEST);
-        add(oldman, BorderLayout.EAST);
+        add(pro_panel, BorderLayout.NORTH);
+        add(kid_panel, BorderLayout.WEST);
+        add(oldman_panel, BorderLayout.EAST);
         JPanel userPanel = new JPanel(new BorderLayout());
-        userPanel.add(user, BorderLayout.CENTER);
+        userPanel.add(user_panel, BorderLayout.CENTER);
         userPanel.add(buttonPanel, BorderLayout.SOUTH);
         add(userPanel, BorderLayout.SOUTH);
         commonPanel.setLayout(new BoxLayout(commonPanel, BoxLayout.Y_AXIS));
@@ -160,7 +164,7 @@ public class Main extends JFrame{
     private JPanel placeholder(int numPlaceholders) {
         JPanel panel;
         panel = new JPanel(new GridLayout(1, numPlaceholders));
-        ImageIcon blank = new ImageIcon("C:/Users/leesz/OneDrive/Dokumenty/karty/blank.png");
+        ImageIcon blank = new ImageIcon("C:/Users/leesz/IdeaProjects/poker/karty/blank.png");
         for (int i = 0; i < numPlaceholders; i++) {
             panel.add(new JLabel(blank));
         }
@@ -179,32 +183,32 @@ public class Main extends JFrame{
                 public void actionPerformed(ActionEvent e) {
                     {
                         if (finalI == 0) {
-                            player1.outcome = "deals";
+                            player1.outcome = Actions.DEALS;
                             player1.dealt = true;
                         }
                         if (finalI == 1) {
-                            player1.outcome = "big blinds";
+                            player1.outcome = Actions.BIG_BLINDS;
                             player1.dealt = true;
                         }
                         if (finalI == 2) {
-                            player1.outcome = "small blinds";
+                            player1.outcome = Actions.SMALL_BLINDS;
                             player1.dealt = true;
                         }
                         if (finalI == 3) {
-                            player1.outcome = "folds";
+                            player1.outcome = Actions.FOLDS;
                             player1.folded = true;
                         }
                         if (finalI == 4) {
-                            player1.outcome = "calls";
+                            player1.outcome = Actions.CALLS;
                         }
                         if (finalI == 5) {
 
-                            player1.outcome = "raises";
+                            player1.outcome = Actions.RAISES;
                             player1.raised = true;
                         }
-                        if(finalI == 6) { player1.outcome = "checks"; }
-                        player1.kolej=player1.kolej+4;
-                        whatsup(player1);
+                        if(finalI == 6) { player1.outcome = Actions.CHECKS; }
+                        player1.go =player1.go +4;
+                            whatsup(player1);
                         moneyuser.setText("Money: " + player1.money);
                         tableuser.setText("Table: " + player1.table);
                         player1.moved = true;
@@ -216,13 +220,28 @@ public class Main extends JFrame{
         }
         return buttons;
     }
+    public Card[] createDeck()
+    {
+        Card[] deck = new Card[52];
+        Suits[] suits = {Suits.DIAMONDS, Suits.SPADES, Suits.CLUBS, Suits.HEARTS};
+        int counter=0;
+        for(int i=0;i<4;i++)
+        {
+            for(int j=2;j<15;j++)
+            {
+                deck[counter]=new Card(suits[i],j);
+                counter++;
+            }
+        }
+        return deck;
+    }
     boolean call()
     {
         boolean call = false;
         if(player1.table==0) {
-            if("folds".equals(player4.outcome))
+            if(Actions.FOLDS==player4.outcome)
             {
-                if("folds".equals(player3.outcome))
+                if(Actions.FOLDS==player3.outcome)
                 {
                     if(player1.table!=player2.table) { call = true; }
                 }
@@ -236,9 +255,9 @@ public class Main extends JFrame{
     {
         boolean check = false;
         if(player1.table!=0) {
-        if("folds".equals(player4.outcome))
+        if(Actions.FOLDS==player4.outcome)
         {
-            if("folds".equals(player3.outcome))
+            if(Actions.FOLDS==player3.outcome)
             {
                 if(player1.table==player2.table) { check = true; }
             }
@@ -251,20 +270,20 @@ public class Main extends JFrame{
     {
         boolean other = false;
         player1.moved = false;
-        if(player1.kolej==1 && !player1.dealt) { actionButtons[0].setEnabled(true); other = true; }
+        if(player1.go ==1 && !player1.dealt) { actionButtons[0].setEnabled(true); other = true; }
 
-        if (player1.kolej == 2 && player1.tura == 1) {
+        if (player1.go == 2 && player1.turn == 1) {
                 actionButtons[2].setEnabled(true);
                 other = true;
             }
-            if (player1.kolej == 3 && player1.tura == 1) {
+            if (player1.go == 3 && player1.turn == 1) {
                 actionButtons[1].setEnabled(true);
                 other = true;
             }
-        if (player1.kolej != 1&&(player1.table == player4.table && player1.table != 0&& !player4.outcome.equals("folds")))
+        if (player1.go != 1&&(player1.table == player4.table && player1.table != 0&& Actions.FOLDS!=player4.outcome))
         { actionButtons[6].setEnabled(true); }
 
-        if(player1.folded&&player1.kolej!=1)
+        if(player1.folded&&player1.go !=1)
         {
             actionButtons[3].setEnabled(true);
             other = true;
@@ -280,41 +299,56 @@ public class Main extends JFrame{
                     actionButtons[6].setEnabled(true);
                 }
                 else { if(check()) { actionButtons[6].setEnabled(true); } if(call()) { actionButtons[4].setEnabled(true); }} }
-
-
-            } }
+            }
+    }
     void disableall()
     {
-        for (JButton button : actionButtons) {
+        for(JButton button : actionButtons)
+        {
             button.setEnabled(false);
         }
     }
-    int[] numery;
-    String[] kolory;
     void game() {
         SwingWorker<Void, Void> worker = new SwingWorker<Void, Void>() {
             @Override
             protected Void doInBackground() throws IOException {
+
+                deck=createDeck();
+                Player[] all_players={player1,player2,player3, player4};
                 while(player1.money>=0) {
-                    carddraw allcards = new carddraw();
-                    numery = allcards.allcards;
-                    kolory = allcards.kolorallcards;
-                    player1.outcome=null;
-                    player2.outcome=null;
-                    player3.outcome=null;
-                    player4.outcome=null;
-                    player1.tura=1;
-                    player2.tura=1;
-                    player3.tura=1;
-                    player4.tura=1;
-                    player1.kolej=1;
-                    player2.kolej=2;
-                    player3.kolej=3;
-                    player4.kolej=4;
-                    player1.folded=false;
-                    player2.folded=false;
-                    player3.folded=false;
-                    player4.folded=false;
+                    List<Card> deckList = Arrays.asList(deck);
+                    Collections.shuffle(deckList);
+                    deck = deckList.toArray(new Card[0]);
+                    Card[] hand1=new Card[7];
+                    Card[] hand2=new Card[7];
+                    Card[] hand3=new Card[7];
+                    Card[] hand4=new Card[7];
+                    Card[][] allhands={hand1,hand2,hand3,hand4};
+                    for(int i=0;i<2;i++)
+                    {
+                        hand1[i]=deck[i];
+                        hand2[i]=deck[i+7];
+                        hand3[i]=deck[i+9];
+                        hand4[i]=deck[i+11];
+                    }
+                    for(Card[] cards : allhands)
+                    {
+                        System.arraycopy(deck, 2, cards, 2, 5);
+                    }
+                    for(Player player : all_players)
+                    {
+                        player.outcome=Actions.NONE;
+                        player.turn=1;
+                        player.folded=false;
+                    }
+                    player1.setHands(new Hand(allhands[0]));
+                    player2.setHands(new Hand(allhands[1]));
+                    player3.setHands(new Hand(allhands[2]));
+                    player4.setHands(new Hand(allhands[3]));
+                    player1.go=1;
+                    player2.go=2;
+                    player3.go=3;
+                    player4.go=4;
                     moneyuser.setText("Money: " + player1.money);
                     tableuser.setText("Table: " + player1.table);
                     moneyykid.setText("Money: " + player2.money);
@@ -323,12 +357,14 @@ public class Main extends JFrame{
                     tablepro.setText("Table: " + player3.table);
                     moneyoldman.setText("Money: " + player4.money);
                     tableoldman.setText("Table: " + player4.table);
-                    potson.setText("Pot: " + pot);
+                    pot_label.setText("Pot: " + pot);
+                    repaint();
+                    revalidate();
                     for (int j = 1; j <= 4; j++) {
                         do {
-                            if ((!player1.moved && player4.moved ) || (!player1.moved && player1.kolej == 1)) {
+                            if ((!player1.moved && player4.moved ) || (!player1.moved && player1.go == 1)) {
                                 buttons();
-                                if ("checks".equals(player1.outcome)) {
+                                if (Actions.CHECKS==player1.outcome) {
                                     SwingUtilities.invokeLater(() -> {
                                         action1.setText("");
                                         action2.setText("");
@@ -340,19 +376,19 @@ public class Main extends JFrame{
                                 break;
                             }
                             if(!threefold()) {
-                                if ((!player2.moved && player1.moved) || (!player2.moved && player2.kolej == 1)) {
-                                    player2.action(allcards.handkid, allcards.kolorkid);
-                                    if(player1.folded&&(player2.outcome.equals("calls")||player2.outcome.equals("small blinds"))&&!player2.raised)
+                                if ((!player2.moved && player1.moved) || (!player2.moved && player2.go == 1)) {
+                                    player2.action();
+                                    if(player1.folded&&(player2.outcome==Actions.CALLS||player2.outcome==Actions.SMALL_BLINDS)&&!player2.raised)
                                     {
-                                        player2.outcome = "raises";
+                                        player2.outcome = Actions.RAISES;
                                         player2.raised = true;
                                     }
                                     whatsup(player2);
                                     SwingUtilities.invokeLater(() -> {
-                                        action3.setText(player2.player + " " + player2.outcome);
+                                        action3.setText(player2.name + " " + player2.outcome);
                                         moneyykid.setText("Money: " + player2.money);
                                         tablekid.setText("Table: " + player2.table);
-                                        if ("checks".equals(player2.outcome)) {
+                                        if (player2.outcome==Actions.CHECKS) {
                                             action1.setText("");
                                             action2.setText("");
                                         }
@@ -363,19 +399,19 @@ public class Main extends JFrame{
                                 if (breakcheck(player2.outcome, player2.table)) {
                                     break;
                                 }
-                                if ((!player3.moved && player2.moved) || (!player3.moved && player3.kolej == 1)) {
-                                    player3.action(allcards.handpro, allcards.kolorpro);
-                                    if(player1.folded&&(player3.outcome.equals("calls")||player2.outcome.equals("big blinds"))&&!player3.raised&&!player2.raised)
+                                if ((!player3.moved && player2.moved) || (!player3.moved && player3.go == 1)) {
+                                    player3.action();
+                                    if(player1.folded&&(player3.outcome==Actions.CALLS||player2.outcome==Actions.BIG_BLINDS)&&!player3.raised&&!player2.raised)
                                     {
-                                        player2.outcome = "raises";
+                                        player2.outcome =Actions.RAISES;
                                         player3.raised = true;
                                     }
                                     whatsup(player3);
                                     SwingUtilities.invokeLater(() -> {
-                                        action2.setText(player3.player + " " + player3.outcome);
+                                        action2.setText(player3.name + " " + player3.outcome);
                                         moneyepro.setText("Money: " + player3.money);
                                         tablepro.setText("Table: " + player3.table);
-                                        if ("checks".equals(player3.outcome)) {
+                                        if (player3.outcome==Actions.CHECKS) {
                                             action1.setText("");
                                         }
                                     });
@@ -385,11 +421,11 @@ public class Main extends JFrame{
                                 if (breakcheck(player3.outcome, player3.table)) {
                                     break;
                                 }
-                                if ((!player4.moved && player3.moved) || (!player4.moved && player4.kolej == 1)) {
-                                    player4.action(allcards.handoldman, allcards.koloroldman);
+                                if ((!player4.moved && player3.moved) || (!player4.moved && player4.go == 1)) {
+                                    player4.action();
                                     whatsup(player4);
                                     SwingUtilities.invokeLater(() -> {
-                                        action1.setText(player4.player + " " + player4.outcome);
+                                        action1.setText(player4.name + " " + player4.outcome);
                                         moneyoldman.setText("Money: " + player4.money);
                                         tableoldman.setText("Table: " + player4.table);
                                     });
@@ -403,7 +439,7 @@ public class Main extends JFrame{
                             else { break; }
                         } while (player1.table >= 0);
                         pot = pot + player1.table + player2.table + player3.table + player4.table;
-                        potson.setText("Pot: " + pot);
+                        pot_label.setText("Pot: " + pot);
                         koniectury();
                         if (j != 4 && !threefold()) {
                             String message = ("End of turn");
@@ -411,13 +447,13 @@ public class Main extends JFrame{
                             JOptionPane.showMessageDialog(framepopup, message);
                         }
                     }
-                    handstate p1 = new handstate(allcards.handuser, allcards.koloruser);
-                    handstate p2 = new handstate(allcards.handkid, allcards.kolorkid);
-                    handstate p3 = new handstate(allcards.handpro, allcards.kolorpro);
-                    handstate p4 = new handstate(allcards.handoldman, allcards.koloroldman);
-                    int[] winki = {p1.wskaznik, p2.wskaznik, p3.wskaznik, p4.wskaznik};
-                    int[] remisy = {p1.wartosc, p2.wartosc, p3.wartosc, p4.wartosc };
-                    int[] remisy2 = {p1.wartosc, p2.wartosc, p3.wartosc, p4.wartosc };
+                    Handstate p1 = new Handstate(player1.hands[3].getRanks(), player1.hands[3].getSuits());
+                    Handstate p2 = new Handstate(player2.hands[3].getRanks(), player2.hands[3].getSuits());
+                    Handstate p3 = new Handstate(player3.hands[3].getRanks(), player3.hands[3].getSuits());
+                    Handstate p4 = new Handstate(player4.hands[3].getRanks(), player4.hands[3].getSuits());
+                    int[] winki = {p1.hand, p2.hand, p3.hand, p4.hand};
+                    int[] remisy = {p1.value, p2.value, p3.value, p4.value};
+                    int[] remisy2 = {p1.value, p2.value, p3.value, p4.value};
                     for (int i = 0; i < winki.length - 1; i++) {
                         for (int j = 0; j < winki.length - 1 - i; j++) {
                             if (winki[j] < winki[j + 1]) {
@@ -433,18 +469,18 @@ public class Main extends JFrame{
                     String winner = null;
                     for(int g = 0;g<=3;g++)
                     {
-                            if (winki[g] == p1.wskaznik && !("folds".equals(player1.outcome))) {
+                            if (winki[g] == p1.hand && (player1.outcome!=Actions.FOLDS)) {
                                 player1.money = player1.money + pot;
-                                winner = player1.player;
-                            } else if (winki[g] == p2.wskaznik && !("folds".equals(player2.outcome))) {
+                                winner = player1.name;
+                            } else if (winki[g] == p2.hand && (player2.outcome!=Actions.FOLDS)) {
                                 player2.money = player2.money + pot;
-                                winner = player2.player;
-                            } else if (winki[g] == p3.wskaznik && !("folds".equals(player3.outcome))) {
+                                winner = player2.name;
+                            } else if (winki[g] == p3.hand && (player3.outcome!=Actions.FOLDS)) {
                                 player3.money = player3.money + pot;
-                                winner = player3.player;
-                            } else if (winki[g] == p4.wskaznik && !("folds".equals(player4.outcome))) {
+                                winner = player3.name;
+                            } else if (winki[g] == p4.hand && (player4.outcome!=Actions.FOLDS)) {
                                 player4.money = player4.money + pot;
-                                winner = player4.player;
+                                winner = player4.name;
                             }
                             if(winner!=null) { break; }
                     }
@@ -457,21 +493,21 @@ public class Main extends JFrame{
                             {
                                 if(remisy2[p]>remisy[1])
                                 {
-                                    if(p==0&&!("folds".equals(player1.outcome))) { player1.money = player1.money + pot;
-                                        winner = player1.player; }
-                                    if(p==1&&!("folds".equals(player2.outcome))) { player2.money = player2.money + pot;
-                                        winner = player2.player; }
-                                    if(p==2&&!("folds".equals(player3.outcome))) { player3.money = player3.money + pot;
-                                        winner = player3.player; }
-                                    if(p==3&&!("folds".equals(player4.outcome))) { player4.money = player4.money + pot;
-                                        winner = player4.player; }
+                                    if(p==0&&!(player1.outcome==Actions.FOLDS)) { player1.money = player1.money + pot;
+                                        winner = player1.name; }
+                                    if(p==1&&!(player2.outcome==Actions.FOLDS)) { player2.money = player2.money + pot;
+                                        winner = player2.name; }
+                                    if(p==2&&!(player3.outcome==Actions.FOLDS)) { player3.money = player3.money + pot;
+                                        winner = player3.name; }
+                                    if(p==3&&!(player4.outcome==Actions.FOLDS)) { player4.money = player4.money + pot;
+                                        winner = player4.name; }
                                 }
                             }
                         }
                     }
                     System.out.print("lol");
                     pot = 0;
-                    potson.setText("Pot: " + pot);
+                    pot_label.setText("Pot: " + pot);
                     save();
                     showcards();
                     repaint();
@@ -498,29 +534,29 @@ public class Main extends JFrame{
                     commonPanel.remove(common);
                 common = placeholder(5);
                 commonPanel.add(common);
-                commonPanel.add(potson);
-                kid.remove(cardbackkid);
-                kid.add(placeholderykid);
-                pro.remove(cardbackpro);
-                pro.add(placeholderypro);
-                oldman.remove(cardbackoldman);
-                oldman.add(placeholderyoldman);
-                user.remove(gracza);
-                user.add(placeholderyuser);
-                user.repaint();
-                user.revalidate();
-                kid.repaint();
-                kid.revalidate();
-                pro.repaint();
-                pro.revalidate();
-                oldman.repaint();
-                oldman.revalidate(); });
+                commonPanel.add(pot_label);
+                kid_panel.remove(cardbackkid);
+                kid_panel.add(placeholderykid);
+                pro_panel.remove(cardbackpro);
+                pro_panel.add(placeholderypro);
+                oldman_panel.remove(cardbackoldman);
+                oldman_panel.add(placeholderyoldman);
+                user_panel.remove(player_panel);
+                user_panel.add(placeholderyuser);
+                user_panel.repaint();
+                user_panel.revalidate();
+                kid_panel.repaint();
+                kid_panel.revalidate();
+                pro_panel.repaint();
+                pro_panel.revalidate();
+                oldman_panel.repaint();
+                oldman_panel.revalidate(); });
 
             }
             private void showcards() {
-                kid.remove(cardbackkid);
-                pro.remove(cardbackpro);
-                oldman.remove(cardbackoldman);
+                kid_panel.remove(cardbackkid);
+                pro_panel.remove(cardbackpro);
+                oldman_panel.remove(cardbackoldman);
 
                 cardbackkid = new JPanel();
                 cardbackpro = new JPanel();
@@ -530,37 +566,42 @@ public class Main extends JFrame{
                     for (int j = 0; j <= 1; j++) {
                         String imagePath;
                         try {
+                            Card card;
                             if (i == 0) {
-                                imagePath = "C:/Users/leesz/OneDrive/Dokumenty/karty/" + player2.showwartosci[j] + player2.showkolory[j] + ".png";
+                                card = player2.hands[0].getCards()[j];
+                                imagePath = "C:/Users/leesz/IdeaProjects/poker" + card.rank + card.suit + ".png";
                                 BufferedImage image = ImageIO.read(new File(imagePath));
                                 cardbackkid.add(new JLabel(new ImageIcon(image)));
                             } else if (i == 1) {
-                                imagePath = "C:/Users/leesz/OneDrive/Dokumenty/karty/" + player3.showwartosci[j] + player3.showkolory[j] + ".png";
+                                card = player3.hands[0].getCards()[j];
+                                imagePath = "C:/Users/leesz/IdeaProjects/poker" + card.rank + card.suit + ".png";
                                 BufferedImage image = ImageIO.read(new File(imagePath));
                                 cardbackpro.add(new JLabel(new ImageIcon(image)));
                             } else if (i == 2) {
-                                imagePath = "C:/Users/leesz/OneDrive/Dokumenty/karty/" + player4.showwartosci[j] + player4.showkolory[j] + ".png";
+                                card = player4.hands[0].getCards()[j];
+                                imagePath = "C:/Users/leesz/IdeaProjects/poker" + card.rank + card.suit + ".png";
                                 BufferedImage image = ImageIO.read(new File(imagePath));
                                 cardbackoldman.add(new JLabel(new ImageIcon(image)));
                             }
                         } catch (IOException e) {
-
+                            e.printStackTrace(); // Optional: show file loading error
                         }
                     }
                 }
+
                 SwingUtilities.invokeLater(() -> {
 
-                    kid.add(cardbackkid);
-                    kid.revalidate();
-                    kid.repaint();
+                    kid_panel.add(cardbackkid);
+                    kid_panel.revalidate();
+                    kid_panel.repaint();
 
-                    pro.add(cardbackpro);
-                    pro.revalidate();
-                    pro.repaint();
+                    pro_panel.add(cardbackpro);
+                    pro_panel.revalidate();
+                    pro_panel.repaint();
 
-                    oldman.add(cardbackoldman);
-                    oldman.revalidate();
-                    oldman.repaint();
+                    oldman_panel.add(cardbackoldman);
+                    oldman_panel.revalidate();
+                    oldman_panel.repaint();
                 });
             }
         };
@@ -570,23 +611,23 @@ public class Main extends JFrame{
     {
         boolean check = false;
         int foldcounter = 0;
-        String[] outcomes = {player1.outcome, player2.outcome, player3.outcome, player4.outcome};
+        Actions[] outcomes = {player1.outcome, player2.outcome, player3.outcome, player4.outcome};
         for(int i = 0;i<=3;i++)
         {
-            if("folds".equals(outcomes[i])) { foldcounter++; }
+            if(Actions.FOLDS==outcomes[i]) { foldcounter++; }
         }
         if(foldcounter>=3) { check = true; }
         return check;
     }
-    boolean breakcheck(String outcome, int kasa)
+    boolean breakcheck(Actions outcome, int kasa)
     {
         boolean check = false;
-        String[] outcomes = {player1.outcome, player2.outcome, player3.outcome, player4.outcome};
+        Actions[] outcomes = {player1.outcome, player2.outcome, player3.outcome, player4.outcome};
         int[] money = {player1.table, player2.table, player3.table, player4.table};
-        if(kasa!=0&&outcome.equals("checks")) {
+        if(kasa!=0&&outcome==Actions.CHECKS) {
         for(int i = 0;i<=3;i++)
         {
-            if (!outcomes[i].equals("folds"))
+            if (outcomes[i]!=Actions.FOLDS)
             {
                 if(money[i]==kasa) {
                     check = true;
@@ -614,84 +655,84 @@ public class Main extends JFrame{
         moneyykid.setText("Money: " + player2.money);
         moneyepro.setText("Money: " + player3.money);
     }
-    void whatsup(player gracz)
+    void whatsup(Player player)
     {
-        int[] stawki = {player1.table, player2.table, player3.table, player4.table};
-        int max = stawki[0];
-        for (int i = 1; i < stawki.length; i++)
-            if (stawki[i] > max)
-            { max = stawki[i]; }
-        int bezsens = max-gracz.table;
-        if(gracz.outcome.equals("calls"))
+        int[] tables = {player1.table, player2.table, player3.table, player4.table};
+        int max = tables[0];
+        for (int i = 1; i < tables.length; i++)
+            if (tables[i] > max)
+            { max = tables[i]; }
+        int bezsens = max-player.table;
+        if(player.outcome==Actions.CALLS)
         {
-            if(bezsens==0) { gracz.outcome="checks"; }
-            gracz.table = gracz.table+bezsens;
-            gracz.money = gracz.money-bezsens;
+            if(bezsens==0) { player.outcome=Actions.CHECKS; }
+            player.table = player.table+bezsens;
+            player.money = player.money-bezsens;
         }
-        if(gracz.outcome.equals("folds")) { gracz.folded=true; }
-        if(gracz.outcome.equals("raises"))
+        if(player.outcome==Actions.FOLDS) { player.folded=true; }
+        if(player.outcome==Actions.RAISES)
         {
-            gracz.table = gracz.table + 100 + bezsens;
-            gracz.money = gracz.money-100-bezsens;
+            player.table = player.table + 100 + bezsens;
+            player.money = player.money-100-bezsens;
         }
-        if(gracz.outcome.equals("small blinds")) { gracz.money = gracz.money-100; gracz.table = gracz.table + 100; }
-        if(gracz.outcome.equals("big blinds")) { gracz.money = gracz.money-200; gracz.table = gracz.table + 200; }
-        if(gracz.outcome.equals("deals"))
+        if(player.outcome==Actions.SMALL_BLINDS) { player.money = player.money-100; player.table = player.table + 100; }
+        if(player.outcome==Actions.BIG_BLINDS) { player.money = player.money-200; player.table = player.table + 200; }
+        if(player.outcome==Actions.DEALS)
         {
-            String number;
+            int[] values=player.hands[3].getRanks();
+            Suits[] suits=player.hands[3].getSuits();
             JPanel panel5 = new JPanel(new GridLayout(1, 5));
             JPanel panel2 = new JPanel(new GridLayout(1, 2));
             for (int i = 0; i <= 6; i++) {
-                number = Integer.toString((numery[i]));
-                String imagePath = "C:/Users/leesz/OneDrive/Dokumenty/karty/" + number + kolory[i] + ".png";
+                String imagePath = "C:/Users/leesz/IdeaProjects/poker/karty/" + values[i] + suits[i] + ".png";
                 try {
                     BufferedImage image = ImageIO.read(new File(imagePath));
 
-                    if (gracz.tura == 1 && (i == 5 || i == 6)) {
+                    if (player.turn == 1 && (i == 0 || i == 1)) {
                         panel2.add(new JLabel(new ImageIcon(image)));
                     }
-                    if (gracz.tura == 2 && i <= 2) {
+                    else if (player.turn == 2 && i <= 4) {
                         panel5.add(new JLabel(new ImageIcon(image)));
                     }
-                    if (gracz.tura == 3 && i <= 3) {
+                    else if (player.turn == 3 && i <= 5) {
                         panel5.add(new JLabel(new ImageIcon(image)));
                     }
-                    if (gracz.tura == 4 && i <= 4) {
+                    else if (player.turn == 4 && i <= 6) {
                         panel5.add(new JLabel(new ImageIcon(image)));
                     }
                 } catch (IOException e) {
                     System.out.println("error: picture was not found");
                 }
             }
-            if(gracz.tura==1)
+            if(player.turn==1)
             {
                 cardbackkid = cardbacks();
                 cardbackpro = cardbacks();
                 cardbackoldman = cardbacks();
 
-                gracza=panel2;
-                user.remove(placeholderyuser);
-                user.add(gracza);
+                player_panel=panel2;
+                user_panel.remove(placeholderyuser);
+                user_panel.add(player_panel);
 
-                kid.remove(placeholderykid);
-                pro.remove(placeholderypro);
-                oldman.remove(placeholderyoldman);
+                kid_panel.remove(placeholderykid);
+                pro_panel.remove(placeholderypro);
+                oldman_panel.remove(placeholderyoldman);
 
-                kid.add(cardbackkid);
-                pro.add(cardbackpro);
-                oldman.add(cardbackoldman);
+                kid_panel.add(cardbackkid);
+                pro_panel.add(cardbackpro);
+                oldman_panel.add(cardbackoldman);
             }
-            if (gracz.tura == 2) {
+            if (player.turn == 2) {
                 panel5.add(placeholder(2));
             }
-            if (gracz.tura == 3) {
+            if (player.turn == 3) {
                 panel5.add(placeholder(1));
             }
-            if(gracz.tura!=1)
+            if(player.turn !=1)
             { commonPanel.remove(common);
             common=panel5;
             commonPanel.add(common);
-            commonPanel.add(potson);
+            commonPanel.add(pot_label);
             commonPanel.revalidate();
             commonPanel.repaint();
             }
@@ -701,7 +742,7 @@ public class Main extends JFrame{
         JPanel cardbacks = new JPanel();
         BufferedImage back;
         try {
-            back = ImageIO.read(new File("C:/Users/leesz/OneDrive/Dokumenty/karty/cardback.png"));
+            back = ImageIO.read(new File("C:/Users/leesz/IdeaProjects/poker/karty/cardback.png"));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

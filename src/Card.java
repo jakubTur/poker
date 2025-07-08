@@ -1,10 +1,10 @@
-public class Card {
-    int value;
-    char colour;
-
-    Card(int val, char col)
+public class Card
+{
+ Suits suit;
+ int rank;
+    public Card (Suits suit, int rank)
     {
-        value=val;
-        colour=col;
+        this.rank = rank;
+        this.suit = suit;
     }
 }
