@@ -1,107 +1,110 @@
 //https://pl.wikipedia.org/wiki/Texas_Hold%E2%80%99em
-public class Handstate
+public class Handstate //used to calculate the value of the hand
 {
     int value;
     int hand;//1-10
-    Suits[] sub_suit = {Suits.DIAMONDS, Suits.SPADES, Suits.CLUBS, Suits.HEARTS};
-    int highest=0;
-    int poker_temp=0;
-    int straight_temp=0;
-    public Handstate()
-    {
-        value=0;
-        hand=0;
-    }
+    final Suits[] sub_suit = { Suits.DIAMONDS, Suits.SPADES, Suits.CLUBS, Suits.HEARTS };
+    int highest;
+    int poker_temp;
+    int straight_temp;
     public Handstate (int[] values, Suits[] suits)
     {
         int l = values.length;
-        for (int j = 0; j < l; j++)
+        poker_temp = 0;
+        straight_temp = 0;
+        for(int i = 0; i < l - 1; i++)
         {
-            if (values[j] > values[j + 1]) {
-                int m = values[j];
-                Suits n = suits[j];
-                values[j] = values[j + 1];
-                suits[j] = suits[j+1];
-                values[j + 1] = m;
-                suits[j+1] = n;
+            for (int j = 0; j < l - i - 1; j++)
+            {
+                if (values[j] > values[j + 1])
+                {
+                    int m = values[j];
+                    Suits n = suits[j];
+                    values[j] = values[j + 1];
+                    suits[j] = suits[j + 1];
+                    values[j + 1] = m;
+                    suits[j + 1] = n;
+                }
             }
         }
-        int para = 0;
-        value = values[l-1];
-        highest = values[l-2];
+        int pair = 0;
+        value = values[l - 1];
+        highest = values[l - 2];
         hand = 1;///1
-        boolean trojka = false;
-        for(int p = 0;p<=l-2;p++)
+        boolean three = false;
+        for(int i = 0; i <= l - 2; i++)
         {
-            if(values[p]==values[p+1])
+            if(values[i] == values[i + 1])
             {
-                for(int h = 0; h<=p-1;h++)
-                { if(values[h]!=values[p]) { highest = values[h]; } }
-                if (p==l-2||values[p+1]!=values[p+2])
+                for(int h = 0; h <= i - 1; h++)
+                { if(values[h] != values[i]) { highest = values[h]; } }
+                if (i == l - 2 || values[i + 1] != values[i + 2])
                 {
-                    para++;
-                    if (hand <3 && para <3) { hand = 2; } ///2+3
-                    value = values[p];
+                    pair++;
+                    if (hand < 3 && pair < 3) { hand = 2; } ///2+3
+                    value = values[i];
                 }
                 else
                 {
                     hand = 4; ///4
-                    trojka = true;
+                    three = true;
 
-                    if(p!=l-3 && values[p+2]==values[p+3])
+                    if(i != l - 3 && values[i + 2] == values[i + 3])
                     {
                         hand = 8;///8
 
                     }
                 }
-                if(para==2&& hand <3) { hand = 3; value = values[p]; }
+                if(pair == 2 && hand < 3) { hand = 3; value = values[i]; }
             }
-            if (trojka && para>1 && hand <7)
+            if (three && pair > 1 && hand < 7)
             {
                 hand = 7;///7
             }
         }
-        int kolor = 0;
-        if(hand <6)//6
+        int colour = 0;
+        if(hand < 6)//6
         {
-            for(int b =0;b<=3;b++)
+            for(int i = 0; i <= 3; i++)
             {
-                for (int a = 0;a<=l-1;a++)
+                for (int a = 0; a <= l - 1; a++)
                 {
-                    if(suits[a].equals(sub_suit[b])) { kolor++; }
-                    if(kolor>=5) { hand = 6; b=15; value = values[a];a=l+1; highest = value;
+                    if(suits[a].equals(sub_suit[i])) { colour++; }
+                    if(colour >= 5)
+                    {
+                        hand = 6; i = 15; value = values[a]; a = l + 1; highest = value;
                     }
 
                 }
-                kolor=0;
+                colour = 0;
             }
         }
         int poker = 0;
         int strit = 0;
-        for(int jajo=0;jajo<=l-2;jajo++)
+        for(int i = 0; i <= l - 2; i++)
         {
-            if(values[jajo]+1==values[jajo+1])
+            if(values[i] + 1 == values[i + 1])
             {
-                if(suits[jajo].equals(suits[jajo+1]))
+                if(suits[i].equals(suits[i + 1]))
                 {
                     poker++;
                     poker_temp = poker;
                 }
                 else { poker = 0; }
                 strit++;
-                straight_temp =strit;
+                straight_temp = strit;
             }
             else { strit = 0;  }
         }
-        if(poker>=4) ///9+10
+        if(poker >= 4) ///9+10
         {
             hand = 9;
-            if(values[l-1]==14 || values[l-2]==14 || values[l-3]==14 || values[l-4]==14)
+            if(values[l - 1] == 14 || values[l - 2] == 14 || values[l - 3] == 14 || values[l - 4] == 14)
             {
                 hand = 10;
             }
         }
-        if(strit>=4 && hand <5) { hand = 5; }///5
+        if(strit >= 4 && hand < 5) { hand = 5; }///5
         }
     }
 

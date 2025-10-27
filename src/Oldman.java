@@ -1,19 +1,18 @@
-public class Oldman extends Player{
-    public Oldman(int kolejka) {
-        super(kolejka);
-        name="oldman";
+public class Oldman extends AI
+{
+    public Oldman(int kolejka, String name) {
+        super(kolejka, name);
     }
 
     @Override
     public Actions action() {
-        checkTurn();
-        updateHand();
         if(money<=0) { outcome = Actions.FOLDS; }
-        if (go == 1) { outcome = Actions.DEALS; dealt = true; }
         int[] ranks = visible_hand.getRanks();
         Suits[] suits = visible_hand.getSuits();
         Handstate handstate = new Handstate(ranks, suits);
-        if (go != 1&&!folded) {
+        if (go == 1 && !dealt) { outcome = Actions.DEALS; dealt = true; }
+        else if (!folded)
+        {
             if (turn == 4) {
                 if (money > 0) {
                     if ((handstate.poker_temp == 4 || handstate.hand == 10) && !raised) {
@@ -49,26 +48,10 @@ public class Oldman extends Player{
                 }
             }
             if (turn == 1) {
-                if (money > 0) {
-                    if ((handstate.straight_temp == 1 || handstate.poker_temp == 1) && !raised) {
-                        outcome = Actions.RAISES;
-                        raised = true;
-                    } else {
-                        outcome = Actions.CALLS;
-                    }
-                    if (go == 2 && !dealt && turn == 1) {
-                        outcome = Actions.SMALL_BLINDS;
-                        dealt = true;
-                    }
-                    if (go == 3 && !dealt && turn == 1) {
-                        outcome = Actions.BIG_BLINDS;
-                        dealt = true;
-                    }
-                }
+                turnOne(handstate);
             }
-        } else if (folded) { outcome = Actions.FOLDS; }
+        } else { outcome = Actions.FOLDS; }
         if(outcome == null) { outcome = Actions.CALLS; }
-        go=go+4;
         return outcome;
     }
 }

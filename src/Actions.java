@@ -6,5 +6,6 @@ public enum Actions {
         RAISES,
         FOLDS,
         NONE,
-        CHECKS
+        CHECKS,
+        OUT
     }

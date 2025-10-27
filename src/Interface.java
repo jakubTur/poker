@@ -6,94 +6,106 @@ import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.nio.file.Path;
 
 public class Interface extends JFrame {
-    JPanel cardbackkid;
-    JPanel cardbackpro;
-    JPanel cardbackoldman;
-    JPanel common = placeholder(5);
-    JPanel pro_panel = new JPanel();
+    Player user;
+    JPanel carbacks_p2;
+    JPanel cardbacks_p3;
+    JPanel cardbacks_p4;
+    JPanel common_cards = placeholders_panel(5);
     JPanel user_panel = new JPanel();
-    JPanel kid_panel = new JPanel();
-    JPanel oldman_panel = new JPanel();
-    JButton[] actionButtons;
+    JPanel p2_panel = new JPanel();
+    JPanel p3_panel = new JPanel();
+    JPanel p4_panel = new JPanel();
+    JButton[] action_buttons;
     JPanel commonPanel = new JPanel();
-    JPanel placeholderyuser = placeholder(2);
-    JPanel placeholderykid = placeholder(2);
-    JPanel placeholderypro = placeholder(2);
-    JPanel placeholderyoldman = placeholder(2);
-    JLabel action1 = new JLabel("this label will");
-    JLabel action2 = new JLabel("register other");
-    JLabel action3 = new JLabel("players' moves");
-    JLabel tablepro = new JLabel("Table: "+player3.table);
-    JLabel tablekid = new JLabel("Table: "+player2.table);
-    JLabel tableuser = new JLabel("Table: "+player1.table);
-    JLabel tableoldman = new JLabel("Table: "+player4.table);
-    JLabel moneyepro = new JLabel("Money: "+player3.money);
-    JLabel moneyykid = new JLabel("Money: "+player2.money);
-    JLabel moneyuser = new JLabel("Money: "+ player1.money);
-    JLabel moneyoldman = new JLabel("Money: "+ player4.money);
-    JLabel pot_label = new JLabel("Pot: "+pot);
+    JPanel p1_placeholders = placeholders_panel(2);
+    JPanel p2_placeholders = placeholders_panel(2);
+    JPanel p3_placeholders = placeholders_panel(2);
+    JPanel p4_placeholders = placeholders_panel(2);
+    JLabel action_label = new JLabel("<html>This label will<br/>register actions</html>");
+    JLabel tablepro;
+    JLabel tablekid;
+    JLabel tableuser;
+    JLabel tableoldman;
+    JLabel moneyepro;
+    JLabel moneyykid;
+    JLabel moneyuser;
+    JLabel moneyoldman;
+    JLabel pot_label;
     JPanel player_panel;
-    public Interface() {
+    public Interface(Player p1) {
         setTitle("Poker");
         setSize(1280, 720);
+        setResizable(false);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        user = p1;
+        action_label.setFont(new Font(null, Font.BOLD, 45));
+        action_label.setHorizontalAlignment(SwingConstants.CENTER);
 
-        action1.setFont(new Font(null, Font.BOLD, 60));
-        action2.setFont(new Font(null, Font.BOLD, 60));
-        action3.setFont(new Font(null, Font.BOLD, 60));
+        tablepro = new JLabel("Table: 0");
+        tablekid = new JLabel("Table: 0");
+        tableuser = new JLabel("Table: 0");
+        tableoldman = new JLabel("Table: 0");
+        moneyepro = new JLabel("Money: 2000");
+        moneyykid = new JLabel("Money: 2000");
+        moneyuser = new JLabel("Money: 2000");
+        moneyoldman = new JLabel("Money: 2000");
 
-        tablepro = new JLabel("Table: "+player3.table);
-        tablekid = new JLabel("Table: "+player2.table);
-        tableuser = new JLabel("Table: "+player1.table);
-        tableoldman = new JLabel("Table: "+player4.table);
-        moneyepro = new JLabel("Money: "+player3.money);
-        moneyykid = new JLabel("Money: "+player2.money);
-        moneyuser = new JLabel("Money: "+ player1.money);
-        moneyoldman = new JLabel("Money: "+ player4.money);
-        pot_label = new JLabel("Pot: "+pot);
+        int fontSize = 32;
+        String fontName = null;
 
-        common.add(pot_label);
+        tablepro.setFont(new Font(fontName, Font.BOLD, fontSize));
+        tablekid.setFont(new Font(fontName, Font.BOLD, fontSize));
+        tableuser.setFont(new Font(fontName, Font.BOLD, fontSize));
+        tableoldman.setFont(new Font(fontName, Font.BOLD, fontSize));
+        moneyepro.setFont(new Font(fontName, Font.BOLD, fontSize));
+        moneyykid.setFont(new Font(fontName, Font.BOLD, fontSize));
+        moneyuser.setFont(new Font(fontName, Font.BOLD, fontSize));
+        moneyoldman.setFont(new Font(fontName, Font.BOLD, fontSize));
+        pot_label = new JLabel("Pot: 0");
+        pot_label.setFont(new Font(null, Font.BOLD, 45));
+        pot_label.setHorizontalTextPosition(SwingConstants.CENTER);
 
-        pro_panel.add(moneyepro);
-        pro_panel.add(tablepro);
-        pro_panel.add(placeholderypro);
+
+        p3_panel.add(moneyepro);
+        p3_panel.add(tablepro);
+        p3_panel.add(p3_placeholders);
 
         user_panel.add(moneyuser);
         user_panel.add(tableuser);
-        user_panel.add(placeholderyuser);
+        user_panel.add(p1_placeholders);
 
-        kid_panel.add(moneyykid);
-        kid_panel.add(tablekid);
-        kid_panel.add(placeholderykid);
+        p2_panel.add(moneyykid);
+        p2_panel.add(tablekid);
+        p2_panel.add(p2_placeholders);
+        p2_panel.setLayout(new BoxLayout(p2_panel, BoxLayout.Y_AXIS));
 
-        oldman_panel.add(moneyoldman);
-        oldman_panel.add(tableoldman);
-        oldman_panel.add(placeholderyoldman);
-        actionButtons = createActionButtonArray();
+        p4_panel.add(moneyoldman);
+        p4_panel.add(tableoldman);
+        p4_panel.add(p4_placeholders);
+        p4_panel.setLayout(new BoxLayout(p4_panel, BoxLayout.Y_AXIS));
+
+        action_buttons = createActionButtonArray();
 
         JPanel buttonPanel = new JPanel(new FlowLayout());
-        for (JButton button : actionButtons) {
+        for (JButton button : action_buttons) {
             buttonPanel.add(button);
             button.setEnabled(false);
         }
+        buttonPanel.add(pot_label);
         setLayout(new BorderLayout());
-        add(pro_panel, BorderLayout.NORTH);
-        add(kid_panel, BorderLayout.WEST);
-        add(oldman_panel, BorderLayout.EAST);
+        add(p3_panel, BorderLayout.NORTH);
+        add(p2_panel, BorderLayout.WEST);
+        add(p4_panel, BorderLayout.EAST);
         JPanel userPanel = new JPanel(new BorderLayout());
         userPanel.add(user_panel, BorderLayout.CENTER);
         userPanel.add(buttonPanel, BorderLayout.SOUTH);
         add(userPanel, BorderLayout.SOUTH);
         commonPanel.setLayout(new BoxLayout(commonPanel, BoxLayout.Y_AXIS));
-        commonPanel.add(action1);
-        commonPanel.add(action2);
-        commonPanel.add(action3);
-        commonPanel.add(common);
+        commonPanel.add(action_label);
+        commonPanel.add(common_cards);
         add(commonPanel, BorderLayout.CENTER);
         setVisible(true);
     }
@@ -109,14 +121,20 @@ public class Interface extends JFrame {
         cardbacks.add(new JLabel(new ImageIcon(back)));
         return cardbacks;
     }
+    void update_label(String text)
+    {
+        SwingUtilities.invokeLater(() -> {
+        action_label.setText(text);
+        commonPanel.revalidate();});
+    }
     void disableButtons()
     {
-        for(JButton button : actionButtons)
+        for(JButton button : action_buttons)
         {
             button.setEnabled(false);
         }
     }
-    private JPanel placeholder(int numPlaceholders) {
+    private JPanel placeholders_panel(int numPlaceholders) {
         JPanel panel;
         panel = new JPanel(new GridLayout(1, numPlaceholders));
         ImageIcon blank = new ImageIcon("C:/Users/leesz/IdeaProjects/poker/karty/blank.png");
@@ -125,10 +143,10 @@ public class Interface extends JFrame {
         }
         return panel;
     }
-    JButton[] createActionButtonArray(Player player1) {
-        String[] buttonLabels = {"Deal","Big Blind", "Small Blind", "Fold", "Call", "Raise / Bet", "Check"};
+    JButton[] createActionButtonArray() {
+        Player player1 = user;
+        String[] buttonLabels = {"Deal","Big Blind", "Small Blind", "Fold", "Call", "Raise", "Check"};
         JButton[] buttons = new JButton[buttonLabels.length];
-
         for (int i = 0; i < buttonLabels.length; i++) {
             buttons[i] = new JButton(buttonLabels[i]);
             int finalI = i;
@@ -161,129 +179,164 @@ public class Interface extends JFrame {
                             player1.raised = true;
                         }
                         if(finalI == 6) { player1.outcome = Actions.CHECKS; }
-                        player1.go = player1.go+4;
-                        whatsup(player1);
                         moneyuser.setText("Money: " + player1.money);
                         tableuser.setText("Table: " + player1.table);
-                        player1.moved = true;
-                        player4.moved = false;
                         disableButtons();
+                        ((User) player1).inputDone();
                     }
                 }
             });
         }
         return buttons;
     }
-
     void boardwipe()
     {
         SwingUtilities.invokeLater(() -> {
-            commonPanel.remove(common);
-            common = placeholder(5);
-            commonPanel.add(common);
-            commonPanel.add(pot_label);
-            kid_panel.remove(cardbackkid);
-            kid_panel.add(placeholderykid);
-            pro_panel.remove(cardbackpro);
-            pro_panel.add(placeholderypro);
-            oldman_panel.remove(cardbackoldman);
-            oldman_panel.add(placeholderyoldman);
+            commonPanel.remove(common_cards);
+            common_cards = placeholders_panel(5);
+            commonPanel.add(common_cards);
+            p2_panel.remove(carbacks_p2);
+            p2_panel.add(p2_placeholders);
+            p3_panel.remove(cardbacks_p3);
+            p3_panel.add(p3_placeholders);
+            p4_panel.remove(cardbacks_p4);
+            p4_panel.add(p4_placeholders);
             user_panel.remove(player_panel);
-            user_panel.add(placeholderyuser);
+            user_panel.add(p1_placeholders);
             user_panel.repaint();
             user_panel.revalidate();
-            kid_panel.repaint();
-            kid_panel.revalidate();
-            pro_panel.repaint();
-            pro_panel.revalidate();
-            oldman_panel.repaint();
-            oldman_panel.revalidate(); });
-
+            p2_panel.repaint();
+            p2_panel.revalidate();
+            p3_panel.repaint();
+            p3_panel.revalidate();
+            p4_panel.repaint();
+            p4_panel.revalidate(); });
     }
-    void buttons()
-    {
-        boolean other = false;
-        player1.moved = false;
-        if(player1.go ==1 && !player1.dealt) { actionButtons[0].setEnabled(true); other = true; }
-
-        if (player1.go == 2 && player1.turn == 1) {
-            actionButtons[2].setEnabled(true);
-            other = true;
-        }
-        if (player1.go == 3 && player1.turn == 1) {
-            actionButtons[1].setEnabled(true);
-            other = true;
-        }
-        if (player1.go != 1&&(player1.table == player4.table && player1.table != 0&& Actions.FOLDS!=player4.outcome))
-        { actionButtons[6].setEnabled(true); }
-
-        if(player1.folded&&player1.go !=1)
-        {
-            actionButtons[3].setEnabled(true);
-            other = true;
-        }
-
-        if (!other) {
-
-            actionButtons[3].setEnabled(true);
-            if(!player1.folded) {
-                if(!player1.raised) { actionButtons[5].setEnabled(true); }
-                if(((player1.table==player2.table)&&(player1.table==player3.table)&&(player1.table==player4.table)&&player1.table!=0))
-                {
-                    actionButtons[6].setEnabled(true);
-                }
-                else { if(check()) { actionButtons[6].setEnabled(true); } if(call()) { actionButtons[4].setEnabled(true); }} }
-        }
+    void updateMoney(Player player1, Player player2, Player player3, Player player4, int pot) {
+        SwingUtilities.invokeLater(() -> {
+            moneyuser.setText("Your" + "'s money: " + player1.money);
+            tableuser.setText("Your" + "'s table: " + player1.table);
+            moneyykid.setText(player2.name + "'s money: " + player2.money);
+            tablekid.setText(player2.name + "'s table: " + player2.table);
+            moneyepro.setText(player3.name + "'s money: " + player3.money);
+            tablepro.setText(player3.name + "'s table: " + player3.table);
+            moneyoldman.setText(player4.name + "'s money: " + player4.money);
+            tableoldman.setText(player4.name + "'s table: " + player4.table);
+            pot_label.setText("Pot: " + pot);
+            repaint();
+            revalidate();
+        });
     }
-    private void showcards() {
-        kid_panel.remove(cardbackkid);
-        pro_panel.remove(cardbackpro);
-        oldman_panel.remove(cardbackoldman);
+    void deal(Player player) {
+        int[] ranks = player.hands[3].getRanks();
+        Suits[] suits = player.hands[3].getSuits();
 
-        cardbackkid = new JPanel();
-        cardbackpro = new JPanel();
-        cardbackoldman = new JPanel();
+        JPanel cardPanel = new JPanel(new GridLayout(1, 5));
+        JPanel playerPanel = new JPanel(new GridLayout(1, 2));
 
-        for (int i = 0; i <= 2; i++) {
-            for (int j = 0; j <= 1; j++) {
-                String imagePath;
-                try {
-                    Card card;
-                    if (i == 0) {
-                        card = player2.hands[0].getCards()[j];
-                        imagePath = "C:/Users/leesz/IdeaProjects/poker" + card.rank + card.suit + ".png";
-                        BufferedImage image = ImageIO.read(new File(imagePath));
-                        cardbackkid.add(new JLabel(new ImageIcon(image)));
-                    } else if (i == 1) {
-                        card = player3.hands[0].getCards()[j];
-                        imagePath = "C:/Users/leesz/IdeaProjects/poker" + card.rank + card.suit + ".png";
-                        BufferedImage image = ImageIO.read(new File(imagePath));
-                        cardbackpro.add(new JLabel(new ImageIcon(image)));
-                    } else if (i == 2) {
-                        card = player4.hands[0].getCards()[j];
-                        imagePath = "C:/Users/leesz/IdeaProjects/poker" + card.rank + card.suit + ".png";
-                        BufferedImage image = ImageIO.read(new File(imagePath));
-                        cardbackoldman.add(new JLabel(new ImageIcon(image)));
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace(); // Optional: show file loading error
+        for (int i = 0; i <= 6; i++) {
+            String imagePath = Path.of("").toAbsolutePath() + "/karty/" + ranks[i] + suits[i] + ".png";
+            try {
+                BufferedImage image = ImageIO.read(new File(imagePath));
+                JLabel cardLabel = new JLabel(new ImageIcon(image));
+
+                switch (player.turn) {
+                    case 1:
+                        if (i == 0 || i == 1) playerPanel.add(cardLabel);
+                        break;
+                    case 2:
+                        if (i <= 4 && i >= 2) cardPanel.add(cardLabel);
+                        break;
+                    case 3:
+                        if (i <= 5 && i >= 2) cardPanel.add(cardLabel);
+                        break;
+                    case 4:
+                        if (i >= 2) cardPanel.add(cardLabel);
+                        break;
                 }
+            } catch (IOException e) {
+                System.out.println("Error: Picture not found at " + imagePath);
             }
         }
 
-        SwingUtilities.invokeLater(() -> {
+        if (player.turn == 1) {
+            carbacks_p2 = cardbacks();
+            cardbacks_p3 = cardbacks();
+            cardbacks_p4 = cardbacks();
 
-            kid_panel.add(cardbackkid);
-            kid_panel.revalidate();
-            kid_panel.repaint();
+            this.player_panel = playerPanel;
+            user_panel.remove(p1_placeholders);
+            user_panel.add(player_panel);
 
-            pro_panel.add(cardbackpro);
-            pro_panel.revalidate();
-            pro_panel.repaint();
+            p2_panel.remove(p2_placeholders);
+            p3_panel.remove(p3_placeholders);
+            p4_panel.remove(p4_placeholders);
 
-            oldman_panel.add(cardbackoldman);
-            oldman_panel.revalidate();
-            oldman_panel.repaint();
-        });
+            p2_panel.add(carbacks_p2);
+            p3_panel.add(cardbacks_p3);
+            p4_panel.add(cardbacks_p4);
+        } else {
+            switch (player.turn) {
+                case 2:
+                    cardPanel.add(placeholders_panel(2));
+                    break;
+                case 3:
+                    cardPanel.add(placeholders_panel(1));
+                    break;
+            }
+            commonPanel.remove(common_cards);
+            common_cards = cardPanel;
+            commonPanel.add(common_cards);
+            commonPanel.revalidate();
+            commonPanel.repaint();
+        }
     }
+
+void showcards(Player player2, Player player3, Player player4) {
+    p2_panel.remove(carbacks_p2);
+    p3_panel.remove(cardbacks_p3);
+    p4_panel.remove(cardbacks_p4);
+
+    carbacks_p2 = new JPanel();
+    cardbacks_p3 = new JPanel();
+    cardbacks_p4 = new JPanel();
+
+    for (int i = 0; i <= 2; i++) { //zmien to na switche
+        for (int j = 0; j <= 1; j++) {
+            String imagePath=Path.of("").toAbsolutePath() + "/karty/";
+            try {
+                Card card;
+                if (i == 0) {
+                    card = player2.hands[0].getCards()[j];
+                    BufferedImage image = ImageIO.read(new File(imagePath + card.rank + card.suit + ".png"));
+                    carbacks_p2.add(new JLabel(new ImageIcon(image)));
+                } else if (i == 1) {
+                    card = player3.hands[0].getCards()[j];
+                    BufferedImage image = ImageIO.read(new File(imagePath + card.rank + card.suit + ".png"));
+                    cardbacks_p3.add(new JLabel(new ImageIcon(image)));
+                } else {
+                    card = player4.hands[0].getCards()[j];
+                    BufferedImage image = ImageIO.read(new File(imagePath + card.rank + card.suit + ".png"));
+                    cardbacks_p4.add(new JLabel(new ImageIcon(image)));
+                }
+            } catch (IOException e) {
+                System.out.println("can't load from path " + imagePath);
+            }
+        }
+    }
+    SwingUtilities.invokeLater(() -> {
+
+        p2_panel.add(carbacks_p2);
+        p2_panel.revalidate();
+        p2_panel.repaint();
+
+        p3_panel.add(cardbacks_p3);
+        p3_panel.revalidate();
+        p3_panel.repaint();
+
+        p4_panel.add(cardbacks_p4);
+        p4_panel.revalidate();
+        p4_panel.repaint();
+    });
+}
 }
