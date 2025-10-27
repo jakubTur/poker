@@ -10,6 +10,8 @@ public class Kid extends AI
         int[] ranks = visible_hand.getRanks();
         Suits[] suits = visible_hand.getSuits();
         Handstate handstate = new Handstate(ranks, suits);
+        int value = handstate.getValue();
+        int hand = handstate.getHand();
         if (go == 1 && !dealt) { outcome = Actions.DEALS; dealt = true; }
         else if (!folded)
         {
@@ -17,7 +19,7 @@ public class Kid extends AI
             {
                 if (money > 0)
                 {
-                    if ((handstate.hand == 7 || handstate.hand == 8) && !raised)
+                    if ((hand == 7 || hand == 8) && !raised)
                     {
                         outcome = Actions.RAISES;
                         raised = true;
@@ -32,13 +34,13 @@ public class Kid extends AI
             {
                 if (money > 0)
                 {
-                    if (((handstate.hand == 4) || handstate.hand == 7 || handstate.hand == 8)&&!raised)
+                    if ((hand == 4 || hand == 7 || hand == 8) && !raised)
                     {
                         outcome = Actions.RAISES;raised = true;
                     }
                     else
                     {
-                            if (handstate.hand == 2 || handstate.hand == 3||handstate.hand == 4 || handstate.hand == 7 || handstate.hand == 8) {
+                            if (hand == 2 || hand == 3 || hand == 4 || hand == 7 || hand == 8) {
                                 outcome = Actions.CALLS;
                             }
                             else
@@ -53,13 +55,13 @@ public class Kid extends AI
             {
                 if (money > 0)
                 {
-                    if (((handstate.hand > 2 && handstate.hand < 5) || handstate.hand == 7 || handstate.hand == 8)&&!raised)
+                    if (((hand > 2 && hand < 5) || hand == 7 || hand == 8) && !raised)
                     {
                         outcome = Actions.RAISES; raised = true;
                     }
                     else
                     {
-                        if ((handstate.hand >= 2 && handstate.hand <= 5) || handstate.hand == 7 || handstate.hand == 8 || (handstate.hand == 1 && handstate.value >= 10))
+                        if ((hand >= 2 && hand <= 5) || hand == 7 || hand == 8 || (hand == 1 && value >= 10))
                         {
                             outcome = Actions.CALLS;
                         }

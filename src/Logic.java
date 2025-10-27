@@ -4,13 +4,13 @@ import java.lang.Thread;
 import java.util.List;
 
 public class Logic {
-    Interface ui;
-    int pot;
-    Card[] deck;
-    Player player1;
-    Player player2;
-    Player player3;
-    Player player4;
+    private final Interface ui;
+    private int pot;
+    private Card[] deck;
+    private final Player player1;
+    private final Player player2;
+    private final Player player3;
+    private final Player player4;
     public Logic(Player p1, Player p2, Player p3, Player p4, Interface main)
     {
         player1 = p1;
@@ -19,18 +19,18 @@ public class Logic {
         player4 = p4;
         pot = 0;
         ui = main;
-        Card[] deck = new Card[52]; //deck creation
-        Suits[] suits = { Suits.DIAMONDS, Suits.SPADES, Suits.CLUBS, Suits.HEARTS };
-        int counter=0;
-        for(int i = 0; i < 4; i++)
-        {
-            for(int j = 2; j < 15; j++)
-            {
-                deck[counter] = new Card(suits[i], j);
-                counter++;
-            }
-        }
-        this.deck = deck; //
+        Card[] deck = new Card[52];                                                     //deck creation
+        Suits[] suits = { Suits.DIAMONDS, Suits.SPADES, Suits.CLUBS, Suits.HEARTS };    //
+        int counter = 0;                                                                //
+        for(int i = 0; i < 4; i++)                                                      //
+        {                                                                               //
+            for(int j = 2; j < 15; j++)                                                 //
+            {                                                                           //
+                deck[counter] = new Card(suits[i], j);                                  //
+                counter++;                                                              //
+            }                                                                           //
+        }                                                                               //
+        this.deck = deck;                                                               //
     }
     boolean notReady(ArrayList<Player> players) //just for the gameplay while loop
     {
@@ -72,9 +72,9 @@ public class Logic {
         Handstate p2 = new Handstate(player2.hands[3].getRanks(), player2.hands[3].getSuits());
         Handstate p3 = new Handstate(player3.hands[3].getRanks(), player3.hands[3].getSuits());
         Handstate p4 = new Handstate(player4.hands[3].getRanks(), player4.hands[3].getSuits());
-        int[] winki = { p1.hand, p2.hand, p3.hand, p4.hand };
-        int[] remisy = { p1.value, p2.value, p3.value, p4.value };
-        int[] remisy2 = { p1.value, p2.value, p3.value, p4.value };
+        int[] winki = { p1.getHand(), p2.getHand(), p3.getHand(), p4.getHand() };
+        int[] remisy = { p1.getValue(), p2.getValue(), p3.getValue(), p4.getValue() };
+        int[] remisy2 = { p1.getValue(), p2.getValue(), p3.getValue(), p4.getValue() };
         for (int i = 0; i < winki.length - 1; i++)
         {
             for (int j = 0; j < winki.length - 1 - i; j++)
@@ -93,19 +93,19 @@ public class Logic {
         Player winner = null;
         for(int g = 0; g <= 3; g++)
         {
-            if (winki[g] == p1.hand && (player1.outcome != Actions.FOLDS))
+            if (winki[g] == p1.getHand() && (player1.outcome != Actions.FOLDS))
             {
                 player1.money = player1.money + pot;
                 winner = player1;
-            } else if (winki[g] == p2.hand && (player2.outcome != Actions.FOLDS))
+            } else if (winki[g] == p2.getHand() && (player2.outcome != Actions.FOLDS))
             {
                 player2.money = player2.money + pot;
                 winner = player2;
-            } else if (winki[g] == p3.hand && (player3.outcome != Actions.FOLDS))
+            } else if (winki[g] == p3.getHand() && (player3.outcome != Actions.FOLDS))
             {
                 player3.money = player3.money + pot;
                 winner = player3;
-            } else if (winki[g] == p4.hand && (player4.outcome != Actions.FOLDS))
+            } else if (winki[g] == p4.getHand() && (player4.outcome != Actions.FOLDS))
             {
                 player4.money = player4.money + pot;
                 winner = player4;
@@ -122,14 +122,26 @@ public class Logic {
                 {
                     if(remisy2[p] > remisy[1])
                     {
-                        if(p == 0 && !(player1.outcome==Actions.FOLDS)) { player1.money = player1.money + pot;
-                            winner = player1; }
-                        if(p==1&&!(player2.outcome==Actions.FOLDS)) { player2.money = player2.money + pot;
-                            winner = player2; }
-                        if(p==2&&!(player3.outcome==Actions.FOLDS)) { player3.money = player3.money + pot;
-                            winner = player3; }
-                        if(p==3&&!(player4.outcome==Actions.FOLDS)) { player4.money = player4.money + pot;
-                            winner = player4; }
+                        if(p == 0 && !(player1.outcome == Actions.FOLDS))
+                        {
+                            player1.money = player1.money + pot;
+                            winner = player1;
+                        }
+                        if(p == 1 && !(player2.outcome == Actions.FOLDS))
+                        {
+                            player2.money = player2.money + pot;
+                            winner = player2;
+                        }
+                        if(p == 2 && !(player3.outcome==Actions.FOLDS))
+                        {
+                            player3.money = player3.money + pot;
+                            winner = player3;
+                        }
+                        if(p == 3 && !(player4.outcome==Actions.FOLDS))
+                        {
+                            player4.money = player4.money + pot;
+                            winner = player4;
+                        }
                     }
                 }
             }
@@ -145,7 +157,7 @@ public class Logic {
         Card[] hand3 = new Card[7];
         Card[] hand4 = new Card[7];
         Card[][] allhands = { hand1, hand2, hand3, hand4 };
-        while(player1.money>=0)
+        while(player1.money >= 0)
         {
             Collections.shuffle(deck_list);
             deck = deck_list.toArray(new Card[0]);
@@ -153,14 +165,14 @@ public class Logic {
             {
                 System.arraycopy(deck, 2, cards, 2, 5);
             }
-            for(int i=0;i<2;i++)
+            for(int i = 0; i < 2; i++)
             {
                 hand1[i] = deck[i];
-                hand2[i] = deck[i+7];
-                hand3[i] = deck[i+9];
-                hand4[i] = deck[i+11]; //maybe add functions to corresponding players?
+                hand2[i] = deck[i + 7];
+                hand3[i] = deck[i + 9];
+                hand4[i] = deck[i + 11]; //maybe add functions to corresponding players?
             }
-            int temp=0;
+            int temp = 0;
             for (Player player : active_players)
             {
                 player.setHands(new Hand(allhands[temp]));
@@ -178,7 +190,7 @@ public class Logic {
                             if (player instanceof User)
                             {
                                 SwingUtilities.invokeLater(() -> {
-                                    player.buttons(ui.action_buttons, largestTable(active_players), canCheck(active_players, player1), canCall(active_players, player1));
+                                    player.buttons(ui.getButtons(), largestTable(active_players), canCheck(active_players, player1), canCall(active_players, player1));
                                 });
                                 ((User) player).waitForInput(); // Wait for user input before continuing
                             }
@@ -201,13 +213,13 @@ public class Logic {
                             }
                         }
                         player.active = false;
-                        ui.update_label(player.name + " " + player.outcome);
+                        ui.updateLabel(player.name + " " + player.outcome);
                         ui.updateMoney(player1, player2, player3, player4, pot);
                         if(!notReady(active_players)) { break; }
                     }
                 }
                 pot = pot + player1.table + player2.table + player3.table + player4.table;
-                ui.pot_label.setText("Pot: " + pot);
+                ui.updateMoney(player1, player2, player3, player4, pot);
                 for(Player player : active_players)
                 {
                     player.endOfTurn();
@@ -250,8 +262,8 @@ public class Logic {
                 counter++;
             }
             pot = 0;
-            ui.pot_label.setText("Pot: " + pot);
-            ui.showcards(player2, player3, player4);
+            ui.updateMoney(player1, player2, player3, player4, pot);
+            ui.showCards(player2, player3, player4);
             ui.repaint();
             ui.revalidate();
             String message;
@@ -267,11 +279,10 @@ public class Logic {
             JOptionPane.showMessageDialog(framepopup, message);
             SwingUtilities.invokeLater(() ->
             {
-                ui.commonPanel.revalidate();
-                ui.commonPanel.repaint();
+                ui.commonRepaint();
                 ui.boardwipe();
             });
-            ui.action_label.setText("");
+            ui.updateLabel("");
         }
     }
     int largestTable(ArrayList<Player> players)

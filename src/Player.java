@@ -1,7 +1,7 @@
 import javax.swing.*;
 
 public class Player {
-    String name;
+    final String name;
     int money;
     int table;
     Hand[] hands;

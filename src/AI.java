@@ -8,7 +8,7 @@ abstract public class AI extends Player
     {
         if (money > 0)
         {
-            if ((handstate.hand > 1 || handstate.value >= 10) && !raised)
+            if ((handstate.getHand() > 1 || handstate.getValue() >= 10) && !raised)
             {
                 outcome = Actions.RAISES;
                 raised = true;

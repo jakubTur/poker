@@ -10,12 +10,15 @@ public class Oldman extends AI
         int[] ranks = visible_hand.getRanks();
         Suits[] suits = visible_hand.getSuits();
         Handstate handstate = new Handstate(ranks, suits);
+        int hand = handstate.getHand();
+        int straightTemp = handstate.getStraightTemp();
+        int pokerTemp = handstate.getStraightTemp();
         if (go == 1 && !dealt) { outcome = Actions.DEALS; dealt = true; }
         else if (!folded)
         {
             if (turn == 4) {
                 if (money > 0) {
-                    if ((handstate.poker_temp == 4 || handstate.hand == 10) && !raised) {
+                    if ((pokerTemp == 4 || hand == 10) && !raised) {
                         outcome = Actions.RAISES;
                         raised = true;
                     } else {
@@ -25,7 +28,7 @@ public class Oldman extends AI
             }
             if (turn == 3) {
                 if (money > 0) {
-                    if (handstate.poker_temp >= 4 && !raised) {
+                    if (pokerTemp >= 4 && !raised) {
                         outcome = Actions.RAISES;
                         raised = true;
                     } else {
@@ -35,11 +38,11 @@ public class Oldman extends AI
             }
             if (turn == 2) {
                 if (money > 0) {
-                    if ((handstate.poker_temp >= 3 || handstate.straight_temp >= 3 || handstate.hand == 7) && !raised) {
+                    if ((pokerTemp >= 3 || straightTemp >= 3 || hand == 7) && !raised) {
                         outcome = Actions.RAISES;
                         raised = true;
                     } else {
-                        if (handstate.poker_temp >= 1 || handstate.straight_temp >= 2) {
+                        if (pokerTemp >= 1 || straightTemp >= 2) {
                             outcome = Actions.CALLS;
                         } else {
                             outcome = Actions.FOLDS;

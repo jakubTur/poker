@@ -9,8 +9,8 @@ public class Hand {
         ranks = new int[cards.length];
         for(int i = 0; i<cards.length; i++)
         {
-            suits[i] = cards[i].suit;
-            ranks[i] = cards[i].rank;
+            suits[i] = cards[i].getSuit();
+            ranks[i] = cards[i].getRank();
         }
     }
     public Suits[] getSuits()

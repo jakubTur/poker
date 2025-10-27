@@ -1,20 +1,19 @@
 //https://pl.wikipedia.org/wiki/Texas_Hold%E2%80%99em
 public class Handstate //used to calculate the value of the hand
 {
-    int value;
-    int hand;//1-10
-    final Suits[] sub_suit = { Suits.DIAMONDS, Suits.SPADES, Suits.CLUBS, Suits.HEARTS };
-    int highest;
-    int poker_temp;
-    int straight_temp;
+    private int value;
+    private int hand;//1-10
+    private int highest;
+    private int pokerTemp;
+    private int straightTemp;
     public Handstate (int[] values, Suits[] suits)
     {
-        int l = values.length;
-        poker_temp = 0;
-        straight_temp = 0;
-        for(int i = 0; i < l - 1; i++)
+        int length = values.length;
+        pokerTemp = 0;
+        straightTemp = 0;
+        for(int i = 0; i < length - 1; i++)
         {
-            for (int j = 0; j < l - i - 1; j++)
+            for (int j = 0; j < length - i - 1; j++)
             {
                 if (values[j] > values[j + 1])
                 {
@@ -28,17 +27,17 @@ public class Handstate //used to calculate the value of the hand
             }
         }
         int pair = 0;
-        value = values[l - 1];
-        highest = values[l - 2];
+        value = values[length - 1];
+        highest = values[length - 2];
         hand = 1;///1
         boolean three = false;
-        for(int i = 0; i <= l - 2; i++)
+        for(int i = 0; i <= length - 2; i++)
         {
             if(values[i] == values[i + 1])
             {
                 for(int h = 0; h <= i - 1; h++)
                 { if(values[h] != values[i]) { highest = values[h]; } }
-                if (i == l - 2 || values[i + 1] != values[i + 2])
+                if (i == length - 2 || values[i + 1] != values[i + 2])
                 {
                     pair++;
                     if (hand < 3 && pair < 3) { hand = 2; } ///2+3
@@ -49,7 +48,7 @@ public class Handstate //used to calculate the value of the hand
                     hand = 4; ///4
                     three = true;
 
-                    if(i != l - 3 && values[i + 2] == values[i + 3])
+                    if(i != length - 3 && values[i + 2] == values[i + 3])
                     {
                         hand = 8;///8
 
@@ -67,12 +66,13 @@ public class Handstate //used to calculate the value of the hand
         {
             for(int i = 0; i <= 3; i++)
             {
-                for (int a = 0; a <= l - 1; a++)
+                for (int a = 0; a <= length - 1; a++)
                 {
+                    Suits[] sub_suit = {Suits.DIAMONDS, Suits.SPADES, Suits.CLUBS, Suits.HEARTS};
                     if(suits[a].equals(sub_suit[i])) { colour++; }
                     if(colour >= 5)
                     {
-                        hand = 6; i = 15; value = values[a]; a = l + 1; highest = value;
+                        hand = 6; i = 15; value = values[a]; a = length + 1; highest = value;
                     }
 
                 }
@@ -81,30 +81,51 @@ public class Handstate //used to calculate the value of the hand
         }
         int poker = 0;
         int strit = 0;
-        for(int i = 0; i <= l - 2; i++)
+        for(int i = 0; i <= length - 2; i++)
         {
             if(values[i] + 1 == values[i + 1])
             {
                 if(suits[i].equals(suits[i + 1]))
                 {
                     poker++;
-                    poker_temp = poker;
+                    pokerTemp = poker;
                 }
                 else { poker = 0; }
                 strit++;
-                straight_temp = strit;
+                straightTemp = strit;
             }
             else { strit = 0;  }
         }
         if(poker >= 4) ///9+10
         {
             hand = 9;
-            if(values[l - 1] == 14 || values[l - 2] == 14 || values[l - 3] == 14 || values[l - 4] == 14)
+            if(values[length - 1] == 14 || values[length - 2] == 14 || values[length - 3] == 14 || values[length - 4] == 14)
             {
                 hand = 10;
             }
         }
         if(strit >= 4 && hand < 5) { hand = 5; }///5
-        }
     }
+    public int getHand()
+    {
+        return hand;
+    }
+    public int getValue()
+    {
+        return value;
+    }
+    public int getHighest()
+    {
+        return highest;
+    }
+    public int getPokerTemp()
+    {
+        return pokerTemp;
+    }
+    public int getStraightTemp()
+    {
+        return straightTemp;
+    }
+
+}
 

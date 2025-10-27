@@ -9,12 +9,13 @@ public class Pro extends AI
         int[] ranks = visible_hand.getRanks();
         Suits[] suits = visible_hand.getSuits();
         Handstate handstate = new Handstate(ranks, suits);
+        int hand = handstate.getHand();
         if (go == 1 && !dealt) { outcome = Actions.DEALS; dealt = true; }
         else if (!folded)
         {
             if (turn == 4) {
                 if (money > 0) {
-                    if (handstate.hand >= 7 && !raised) {
+                    if (hand >= 7 && !raised) {
                         outcome = Actions.RAISES;
                         raised = true;
                     } else {
@@ -24,11 +25,11 @@ public class Pro extends AI
             }
             if (turn == 3) {
                 if (money > 0) {
-                    if (handstate.hand >= 4 && !raised) {
+                    if (hand >= 4 && !raised) {
                         outcome = Actions.RAISES;
                         raised = true;
                     } else {
-                        if (handstate.hand == 2 || handstate.hand == 3) {
+                        if (hand == 2 || hand == 3) {
                             outcome = Actions.CALLS;
                         } else {
                             outcome = Actions.FOLDS;
@@ -38,11 +39,11 @@ public class Pro extends AI
             }
             if (turn == 2) {
                 if (money > 0) {
-                    if (handstate.hand >= 4 && !raised) {
+                    if (hand >= 4 && !raised) {
                         outcome = Actions.RAISES;
                         raised = true;
                     } else {
-                        if (handstate.hand > 2) {
+                        if (hand > 2) {
                             outcome = Actions.CALLS;
                         } else {
                             outcome = Actions.FOLDS;

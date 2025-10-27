@@ -39,10 +39,10 @@ public class User extends Player{
             actionButtons[1].setEnabled(true);
             other = true;
         }
-        if (max<table)
+        if (max < table)
         { actionButtons[6].setEnabled(true); }
 
-        if(folded&&go !=1)
+        if(folded && go != 1)
         {
             actionButtons[3].setEnabled(true);
             other = true;
